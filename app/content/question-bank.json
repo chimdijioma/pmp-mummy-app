@@ -1,0 +1,529 @@
+[
+  {
+    "id": "mcq_people_predictive_stakeholder_engagement_001",
+    "mode": "mcq",
+    "domain": "people",
+    "framework": "predictive",
+    "difficulty": 2,
+    "prompt": "In a predictive project, the BEST first action when a key stakeholder becomes disengaged is to:",
+    "choices": [
+      "Escalate to the sponsor immediately",
+      "Update the stakeholder engagement assessment and adjust the engagement plan",
+      "Replace the stakeholder with a delegate",
+      "Send more status emails to the stakeholder"
+    ],
+    "correctChoiceIndex": 1,
+    "formalDefinition": "Stakeholder engagement is the process of working with stakeholders to meet their needs and expectations, address issues, and foster appropriate involvement throughout the project.",
+    "textbookReference": "PMBOK Guide 7th Ed: Stakeholder Engagement; PMBOK 6th: Stakeholder Management Knowledge Area",
+    "nigerianAnalogy": "If Mummy Chi is planning a big traditional wedding and the bride’s uncle stops attending meetings, you don’t just ‘report him’—you first ask why, adjust how you communicate, and bring him back into the gist in a way that works for him."
+  },
+  {
+    "id": "mcq_process_predictive_change_control_001",
+    "mode": "mcq",
+    "domain": "process",
+    "framework": "predictive",
+    "difficulty": 3,
+    "prompt": "A team member suggests adding new features that were not approved. In predictive, what should the project manager do FIRST?",
+    "choices": [
+      "Add the features because they increase value",
+      "Reject the idea to avoid scope creep",
+      "Submit a change request through the integrated change control process",
+      "Ask the team to implement it quietly to save time"
+    ],
+    "correctChoiceIndex": 2,
+    "formalDefinition": "Integrated change control is the process of reviewing all change requests, approving changes, and managing changes to deliverables, project documents, and the project management plan.",
+    "textbookReference": "PMBOK 6th: Perform Integrated Change Control; PMBOK 7th: Value delivery and governance",
+    "nigerianAnalogy": "It’s like a tailor deciding to add extra embroidery without your approval—nice or not, you must agree on cost and timeline first, otherwise the delivery date will shock everybody."
+  },
+  {
+    "id": "mcq_business_agile_value_001",
+    "mode": "mcq",
+    "domain": "business",
+    "framework": "agile",
+    "difficulty": 2,
+    "prompt": "In Agile delivery, the PRIMARY reason to deliver work in small increments is to:",
+    "choices": [
+      "Avoid documenting requirements",
+      "Maximize early value and enable fast feedback",
+      "Ensure the project never changes scope",
+      "Reduce the need for stakeholder involvement"
+    ],
+    "correctChoiceIndex": 1,
+    "formalDefinition": "Incremental delivery provides usable portions of the product frequently to obtain feedback and adapt plans, optimizing value realization.",
+    "textbookReference": "PMI Agile Practice Guide: Incremental delivery, feedback loops",
+    "nigerianAnalogy": "In the market, you don’t buy ten bags of tomatoes from a new seller at once—you test small, confirm quality, then scale up with confidence."
+  },
+  {
+    "id": "mcq_process_agile_definition_of_done_001",
+    "mode": "mcq",
+    "domain": "process",
+    "framework": "agile",
+    "difficulty": 3,
+    "prompt": "A clear Definition of Done primarily helps the team to:",
+    "choices": [
+      "Increase the number of story points completed",
+      "Avoid testing until the end of the project",
+      "Create a shared understanding of quality and completeness",
+      "Prevent any changes to the product backlog"
+    ],
+    "correctChoiceIndex": 2,
+    "formalDefinition": "Definition of Done is a shared set of criteria that a product increment must meet to be considered complete, ensuring consistent quality and transparency.",
+    "textbookReference": "PMI Agile Practice Guide; Scrum Guide: Definition of Done",
+    "nigerianAnalogy": "It’s like agreeing with a caterer that ‘jollof is ready’ means properly cooked, served hot, and tasted—no half-done rice that will embarrass you in front of guests."
+  },
+  {
+    "id": "mcq_people_hybrid_governance_001",
+    "mode": "mcq",
+    "domain": "people",
+    "framework": "hybrid",
+    "difficulty": 4,
+    "prompt": "In a hybrid project, the BEST approach to governance is to:",
+    "choices": [
+      "Use only Agile ceremonies and ignore approvals",
+      "Use only predictive stage gates and avoid iteration",
+      "Blend iterative delivery with required approvals and clear decision rights",
+      "Let each team member decide how governance works"
+    ],
+    "correctChoiceIndex": 2,
+    "formalDefinition": "Hybrid approaches combine predictive and adaptive practices to optimize delivery while meeting organizational governance, compliance, and control needs.",
+    "textbookReference": "PMBOK Guide 7th Ed: Tailoring; PMI Agile Practice Guide: Hybrid approaches",
+    "nigerianAnalogy": "It’s like planning a massive wedding: you can do small tastings and fittings weekly (Agile), but you still need final approvals for hall booking and budget sign-off (Predictive)."
+  },
+
+  {
+    "id": "flashcard_process_predictive_wbs_001",
+    "mode": "flashcard",
+    "domain": "process",
+    "framework": "predictive",
+    "difficulty": 2,
+    "front": "What is a Work Breakdown Structure (WBS)?",
+    "back": "A hierarchical decomposition of the total scope of work to accomplish the project objectives and create the deliverables. The WBS organizes deliverables into manageable components (work packages).",
+    "formalDefinition": "A Work Breakdown Structure is a deliverable-oriented hierarchical decomposition of the work to be executed by the project team.",
+    "textbookReference": "PMBOK 6th: Create WBS; Scope Baseline",
+    "nigerianAnalogy": "If you’re cooking for a big owambe, you break it down: rice, meat, drinks, chairs, decorations—then each part has smaller tasks. That breakdown stops confusion and last-minute panic."
+  },
+  {
+    "id": "flashcard_people_agile_servant_leadership_001",
+    "mode": "flashcard",
+    "domain": "people",
+    "framework": "agile",
+    "difficulty": 2,
+    "front": "What is servant leadership in Agile teams?",
+    "back": "A leadership approach where the leader focuses on serving the team by removing impediments, enabling collaboration, and supporting autonomy so the team can deliver value.",
+    "formalDefinition": "Servant leadership emphasizes the growth and well-being of people and communities, prioritizing the team’s needs to enable performance and outcomes.",
+    "textbookReference": "PMI Agile Practice Guide: Servant leadership",
+    "nigerianAnalogy": "A good team lead is like a respected auntie at a family event—she doesn’t do all the cooking, but she clears obstacles, coordinates people, and ensures everyone has what they need to perform."
+  },
+  {
+    "id": "flashcard_business_hybrid_value_delivery_001",
+    "mode": "flashcard",
+    "domain": "business",
+    "framework": "hybrid",
+    "difficulty": 3,
+    "front": "Why do hybrid approaches help value delivery in complex organizations?",
+    "back": "They allow iterative learning and frequent delivery while still meeting compliance, approvals, budgeting, and reporting requirements—balancing adaptability with control.",
+    "formalDefinition": "Hybrid delivery combines approaches to optimize value flow and outcomes under organizational constraints.",
+    "textbookReference": "PMBOK 7th: Tailoring; Value delivery system",
+    "nigerianAnalogy": "Like running a shop with both cash sales (fast) and corporate invoices (controlled): you keep moving quickly, but still satisfy the ‘paperwork people’."
+  },
+
+  {
+    "id": "theory_process_predictive_critical_path_001",
+    "mode": "theory",
+    "domain": "process",
+    "framework": "predictive",
+    "difficulty": 3,
+    "prompt": "Explain the critical path method (CPM) and how a project manager uses it to manage schedule risk.",
+    "expectedKeyPoints": [
+      "Define critical path as the longest path through the network with zero total float",
+      "Activities on the critical path directly affect the project finish date",
+      "Use float analysis to focus monitoring and controls",
+      "Schedule compression options: crashing and fast tracking (with risk trade-offs)",
+      "Use CPM to identify schedule risk and prioritize mitigation"
+    ],
+    "formalDefinition": "Critical Path Method is a schedule network analysis technique used to determine the shortest possible project duration by identifying the sequence of activities with the least scheduling flexibility (zero or minimum float).",
+    "textbookReference": "PMBOK 6th: Schedule Management (Critical path method, float, compression)",
+    "nigerianAnalogy": "If you’re preparing for a big wedding, some tasks can delay others. If the hall isn’t booked, nothing else matters. CPM helps you find the ‘hall booking’ type tasks that can spoil the whole timeline."
+  },
+  {
+    "id": "theory_people_agile_conflict_001",
+    "mode": "theory",
+    "domain": "people",
+    "framework": "agile",
+    "difficulty": 3,
+    "prompt": "In an Agile team, how should conflict be handled to protect collaboration and delivery?",
+    "expectedKeyPoints": [
+      "Address conflict early and directly",
+      "Focus on interests and outcomes, not personalities",
+      "Use facilitation and working agreements",
+      "Encourage psychological safety and respectful communication",
+      "Escalate only when the team cannot resolve"
+    ],
+    "formalDefinition": "Conflict management in Agile emphasizes healthy disagreement, early resolution, and facilitation to maintain collaboration, trust, and continuous delivery.",
+    "textbookReference": "PMI Agile Practice Guide: Team dynamics and conflict",
+    "nigerianAnalogy": "When two stubborn tailors argue about style, you settle it early with clear measurements and agreement—if you ignore it, you’ll get a dress that doesn’t fit and everyone will blame each other."
+  },
+  {
+    "id": "mcq_business_predictive_business_case_001",
+    "mode": "mcq",
+    "domain": "business",
+    "framework": "predictive",
+    "difficulty": 2,
+    "prompt": "Which document most directly justifies why a project should exist?",
+    "choices": ["Risk register", "Business case", "Issue log", "Team charter"],
+    "correctChoiceIndex": 1,
+    "formalDefinition": "A business case documents the economic feasibility of the project and provides justification for initiating it, including benefits, costs, and risks.",
+    "textbookReference": "PMBOK 6th: Business documents; Project Integration Management",
+    "nigerianAnalogy": "Before you rent a new shop, you write down: expected sales, rent, generator cost, and profit. That ‘does it make sense?’ paper is your business case."
+  },
+  {
+    "id": "mcq_process_predictive_risk_response_001",
+    "mode": "mcq",
+    "domain": "process",
+    "framework": "predictive",
+    "difficulty": 3,
+    "prompt": "Which is an example of a risk response strategy for a NEGATIVE risk (threat)?",
+    "choices": ["Exploit", "Enhance", "Avoid", "Share"],
+    "correctChoiceIndex": 2,
+    "formalDefinition": "Threat response strategies include avoid, transfer, mitigate, accept (and escalate where appropriate).",
+    "textbookReference": "PMBOK 6th: Plan Risk Responses",
+    "nigerianAnalogy": "If rain can spoil your outdoor party, you avoid the risk by moving indoors early—not by ‘enhancing’ the rain."
+  },
+  {
+    "id": "mcq_process_predictive_evm_001",
+    "mode": "mcq",
+    "domain": "process",
+    "framework": "predictive",
+    "difficulty": 4,
+    "prompt": "An SPI (Schedule Performance Index) of 0.8 indicates the project is:",
+    "choices": ["Ahead of schedule", "On schedule", "Behind schedule", "Over budget only"],
+    "correctChoiceIndex": 2,
+    "formalDefinition": "SPI = EV / PV. If SPI < 1.0, the project is progressing at a slower rate than planned (behind schedule).",
+    "textbookReference": "PMBOK 6th: Earned Value Management",
+    "nigerianAnalogy": "If you planned to finish 10 outfits by Friday but only delivered 8, you’re behind schedule—no motivational speech will change that math."
+  },
+  {
+    "id": "mcq_people_predictive_team_development_001",
+    "mode": "mcq",
+    "domain": "people",
+    "framework": "predictive",
+    "difficulty": 2,
+    "prompt": "Tuckman’s model describes team development stages as:",
+    "choices": [
+      "Initiating, Planning, Executing, Closing",
+      "Forming, Storming, Norming, Performing",
+      "Identify, Analyze, Respond, Monitor",
+      "Define, Measure, Improve, Control"
+    ],
+    "correctChoiceIndex": 1,
+    "formalDefinition": "Teams commonly progress through forming, storming, norming, and performing as they build trust, norms, and effective collaboration.",
+    "textbookReference": "PMBOK 6th: Develop Team",
+    "nigerianAnalogy": "When a new choir forms, first everyone is polite (forming), then ego clashes (storming), then they agree on practice rules (norming), and finally they sing like angels (performing)."
+  },
+  {
+    "id": "mcq_people_agile_self_organizing_001",
+    "mode": "mcq",
+    "domain": "people",
+    "framework": "agile",
+    "difficulty": 2,
+    "prompt": "A self-organizing Agile team means the team:",
+    "choices": [
+      "Has no leadership or accountability",
+      "Chooses how best to accomplish work within constraints",
+      "Works without stakeholder feedback",
+      "Avoids planning entirely"
+    ],
+    "correctChoiceIndex": 1,
+    "formalDefinition": "Self-organizing teams decide internally how to accomplish their work, improving ownership, responsiveness, and collaboration while aligning to goals and boundaries.",
+    "textbookReference": "PMI Agile Practice Guide: Empowered teams",
+    "nigerianAnalogy": "Like a trusted kitchen crew: you state the menu and time, and they decide who chops, who stirs, and who plates—no micromanaging every spoon."
+  },
+  {
+    "id": "mcq_process_agile_backlog_refinement_001",
+    "mode": "mcq",
+    "domain": "process",
+    "framework": "agile",
+    "difficulty": 3,
+    "prompt": "Backlog refinement is primarily used to:",
+    "choices": [
+      "Lock scope so it cannot change",
+      "Make future work items clearer, smaller, and better understood",
+      "Replace sprint planning",
+      "Eliminate the need for estimates"
+    ],
+    "correctChoiceIndex": 1,
+    "formalDefinition": "Backlog refinement improves readiness of work items through clarification, decomposition, and acceptance criteria, enabling smoother planning and delivery.",
+    "textbookReference": "PMI Agile Practice Guide: Backlog refinement",
+    "nigerianAnalogy": "Before you go to the market, you rewrite your list: quantities, brand, and budget—so you don’t start arguing with the trader when you arrive."
+  },
+  {
+    "id": "mcq_business_hybrid_tailoring_001",
+    "mode": "mcq",
+    "domain": "business",
+    "framework": "hybrid",
+    "difficulty": 3,
+    "prompt": "Tailoring in project management means:",
+    "choices": [
+      "Copying the same method for every project",
+      "Selecting and adjusting practices to fit the project context",
+      "Avoiding governance requirements",
+      "Only using Agile methods"
+    ],
+    "correctChoiceIndex": 1,
+    "formalDefinition": "Tailoring is the deliberate adaptation of processes, methods, and governance to fit the project’s needs, environment, constraints, and objectives.",
+    "textbookReference": "PMBOK Guide 7th Ed: Tailoring",
+    "nigerianAnalogy": "A good tailor measures you before sewing. Same way, you don’t force one methodology on every project—measure the context, then cut the cloth."
+  },
+
+  {
+    "id": "flashcard_process_agile_user_story_001",
+    "mode": "flashcard",
+    "domain": "process",
+    "framework": "agile",
+    "difficulty": 1,
+    "front": "What is a user story?",
+    "back": "A short, simple description of a feature from the user’s perspective, often in the format: As a <user>, I want <goal>, so that <benefit>.",
+    "formalDefinition": "A user story is an Agile requirement expressed from the perspective of the end user to capture value and intent.",
+    "textbookReference": "PMI Agile Practice Guide: Requirements in Agile",
+    "nigerianAnalogy": "It’s like telling the tailor, ‘As a bride, I want a dress that lets me dance, so I won’t be stressed at the reception.’ Clear benefit, not just sewing details."
+  },
+  {
+    "id": "flashcard_business_predictive_governance_001",
+    "mode": "flashcard",
+    "domain": "business",
+    "framework": "predictive",
+    "difficulty": 3,
+    "front": "What is project governance?",
+    "back": "A framework of functions, roles, responsibilities, and processes that guide decision-making, approvals, and oversight to ensure the project meets organizational objectives.",
+    "formalDefinition": "Governance provides oversight, decision rights, and controls to align projects with strategy and compliance needs.",
+    "textbookReference": "PMBOK 7th: Governance; Value delivery system",
+    "nigerianAnalogy": "Like elders deciding budget and rules for a family ceremony—who can approve spending, what must be reported, and how decisions are made."
+  },
+  {
+    "id": "flashcard_process_predictive_baseline_001",
+    "mode": "flashcard",
+    "domain": "process",
+    "framework": "predictive",
+    "difficulty": 2,
+    "front": "What is a baseline (schedule/cost/scope baseline)?",
+    "back": "An approved version of a plan (scope, schedule, or cost) used to compare actual performance and control changes. It can only be changed through formal change control.",
+    "formalDefinition": "A baseline is the approved version of a work product that can be changed only through formal change control and is used as the basis for comparison.",
+    "textbookReference": "PMBOK 6th: Baselines and control",
+    "nigerianAnalogy": "If you agreed the wedding budget is ₦5m, that’s the baseline. Spending beyond it needs approval—not ‘we’ll explain later’."
+  },
+
+  {
+    "id": "theory_business_hybrid_benefits_001",
+    "mode": "theory",
+    "domain": "business",
+    "framework": "hybrid",
+    "difficulty": 4,
+    "prompt": "Describe benefits management and how it relates to project success beyond delivering scope, on time, and on budget.",
+    "expectedKeyPoints": [
+      "Benefits are measurable value outcomes realized after deliverables are used",
+      "Benefits management aligns project outputs to strategic outcomes",
+      "Includes planning, tracking, and sustaining benefits",
+      "Project success includes value realization, stakeholder satisfaction, and outcomes",
+      "Handover/adoption/change management are critical"
+    ],
+    "formalDefinition": "Benefits management is the practice of defining, creating, maximizing, and sustaining the benefits delivered by a project or program to realize strategic value.",
+    "textbookReference": "PMBOK 7th: Value delivery system; Benefits realization",
+    "nigerianAnalogy": "It’s not enough to buy a deep freezer (deliverable). The benefit is that the house now saves money and stores food safely. If nobody plugs it in or maintains it, you delivered ‘scope’ but got no value."
+  },
+
+  {
+    "id": "mcq_people_predictive_raci_001",
+    "mode": "mcq",
+    "domain": "people",
+    "framework": "predictive",
+    "difficulty": 2,
+    "prompt": "A RACI chart is primarily used to:",
+    "choices": [
+      "Estimate activity durations",
+      "Clarify roles and responsibilities",
+      "Identify project risks",
+      "Baseline the project schedule"
+    ],
+    "correctChoiceIndex": 1,
+    "formalDefinition": "A RACI chart maps work to roles as Responsible, Accountable, Consulted, and Informed to clarify responsibilities and reduce confusion.",
+    "textbookReference": "PMBOK 6th: Resource Management (Responsibility assignment matrix)",
+    "nigerianAnalogy": "Like assigning wedding duties: who will cook (Responsible), who owns final decision (Accountable), who must be consulted (Consulted), and who just needs updates (Informed)."
+  },
+  {
+    "id": "mcq_process_predictive_scope_validation_001",
+    "mode": "mcq",
+    "domain": "process",
+    "framework": "predictive",
+    "difficulty": 3,
+    "prompt": "Validate Scope is primarily about:",
+    "choices": [
+      "Ensuring the deliverables meet quality standards internally",
+      "Getting formal acceptance of completed deliverables",
+      "Approving change requests",
+      "Creating the WBS"
+    ],
+    "correctChoiceIndex": 1,
+    "formalDefinition": "Validate Scope is the process of formalizing acceptance of completed project deliverables by the customer or sponsor.",
+    "textbookReference": "PMBOK 6th: Validate Scope",
+    "nigerianAnalogy": "It’s like the customer wearing the outfit and saying, ‘Yes, it fits—collect your balance.’ That acceptance matters more than the tailor’s personal opinion."
+  },
+  {
+    "id": "mcq_business_predictive_procurement_001",
+    "mode": "mcq",
+    "domain": "business",
+    "framework": "predictive",
+    "difficulty": 3,
+    "prompt": "A fixed-price contract generally shifts more cost risk to the:",
+    "choices": ["Buyer", "Seller", "Sponsor", "Project manager"],
+    "correctChoiceIndex": 1,
+    "formalDefinition": "In fixed-price contracts, the seller bears more cost risk because payment is set, subject to contract terms and change control.",
+    "textbookReference": "PMBOK 6th: Procurement (Contract types)",
+    "nigerianAnalogy": "If you agree ‘sew this dress for ₦50k’ no matter what, the tailor carries the risk if fabric is harder or takes longer—unless you change the scope."
+  },
+  {
+    "id": "mcq_process_agile_velocity_001",
+    "mode": "mcq",
+    "domain": "process",
+    "framework": "agile",
+    "difficulty": 2,
+    "prompt": "Velocity is best described as:",
+    "choices": [
+      "The amount of work completed per iteration by the team",
+      "The number of stakeholders engaged per week",
+      "A guarantee of delivery dates",
+      "The total budget spent per sprint"
+    ],
+    "correctChoiceIndex": 0,
+    "formalDefinition": "Velocity is a measure of a team’s throughput per iteration, used for forecasting, not as a commitment guarantee.",
+    "textbookReference": "PMI Agile Practice Guide: Estimation and forecasting",
+    "nigerianAnalogy": "If your kitchen can cook 10 trays of small chops per day, that’s your velocity—use it to plan, not to beat people with unrealistic targets."
+  },
+  {
+    "id": "mcq_people_agile_retro_001",
+    "mode": "mcq",
+    "domain": "people",
+    "framework": "agile",
+    "difficulty": 2,
+    "prompt": "The primary purpose of a retrospective is to:",
+    "choices": [
+      "Blame individuals for mistakes",
+      "Inspect and adapt the team’s process to improve",
+      "Estimate the next sprint",
+      "Approve project scope changes"
+    ],
+    "correctChoiceIndex": 1,
+    "formalDefinition": "A retrospective is a regular event where the team reflects on how to become more effective and adjusts accordingly.",
+    "textbookReference": "PMI Agile Practice Guide: Retrospectives",
+    "nigerianAnalogy": "After a party, you sit down and ask: what worked, what didn’t, and how do we do it better next time—without fighting."
+  },
+  {
+    "id": "mcq_business_agile_mvp_001",
+    "mode": "mcq",
+    "domain": "business",
+    "framework": "agile",
+    "difficulty": 3,
+    "prompt": "An MVP (Minimum Viable Product) is best used to:",
+    "choices": [
+      "Deliver every feature at once",
+      "Test assumptions and learn with minimal investment",
+      "Avoid stakeholder feedback",
+      "Replace quality standards"
+    ],
+    "correctChoiceIndex": 1,
+    "formalDefinition": "An MVP is the smallest useful product increment that allows learning and validation of value assumptions with real users.",
+    "textbookReference": "PMI Agile Practice Guide: Value and experimentation",
+    "nigerianAnalogy": "Before you open a big restaurant, you start with small ‘food trays’ to test demand—then expand if people are truly buying."
+  },
+  {
+    "id": "mcq_process_hybrid_stage_gates_001",
+    "mode": "mcq",
+    "domain": "process",
+    "framework": "hybrid",
+    "difficulty": 4,
+    "prompt": "In a hybrid project, stage gates are MOST useful for:",
+    "choices": [
+      "Replacing iterative delivery",
+      "Providing approval points for funding, compliance, or major decisions",
+      "Eliminating stakeholder feedback",
+      "Preventing any changes after the first sprint"
+    ],
+    "correctChoiceIndex": 1,
+    "formalDefinition": "Stage gates are governance checkpoints where continuation decisions are made based on performance, risk, and alignment.",
+    "textbookReference": "PMBOK 7th: Governance and tailoring; Hybrid delivery",
+    "nigerianAnalogy": "Like pausing at key wedding milestones—venue deposit, catering contract—so elders can confirm money and risk before you ‘carry body’ into the next phase."
+  },
+  {
+    "id": "mcq_people_hybrid_change_leadership_001",
+    "mode": "mcq",
+    "domain": "people",
+    "framework": "hybrid",
+    "difficulty": 3,
+    "prompt": "When introducing Agile practices into a traditionally predictive organization, the project manager should FIRST:",
+    "choices": [
+      "Remove all documentation immediately",
+      "Assess readiness and tailor the approach with stakeholders",
+      "Ignore governance requirements to move faster",
+      "Force daily standups for every department"
+    ],
+    "correctChoiceIndex": 1,
+    "formalDefinition": "Change leadership requires assessing context, stakeholder buy-in, constraints, and tailoring practices to drive adoption sustainably.",
+    "textbookReference": "PMBOK 7th: Stakeholders, tailoring, change",
+    "nigerianAnalogy": "You don’t change a whole family’s wedding tradition overnight—first you talk to elders, agree what can change, and introduce improvements without disrespect."
+  },
+
+  {
+    "id": "flashcard_process_predictive_float_001",
+    "mode": "flashcard",
+    "domain": "process",
+    "framework": "predictive",
+    "difficulty": 3,
+    "front": "What is float (slack) in a schedule?",
+    "back": "The amount of time an activity can be delayed without delaying the project finish date (total float) or the start of a successor (free float).",
+    "formalDefinition": "Float is the amount of time an activity can be delayed without affecting subsequent activities or the project completion date.",
+    "textbookReference": "PMBOK 6th: Schedule network analysis",
+    "nigerianAnalogy": "If you can buy drinks on Thursday or Friday and still be ready for Saturday’s party, that ‘extra room’ is float."
+  },
+  {
+    "id": "flashcard_people_predictive_power_interest_001",
+    "mode": "flashcard",
+    "domain": "people",
+    "framework": "predictive",
+    "difficulty": 2,
+    "front": "What is a power/interest grid used for?",
+    "back": "To categorize stakeholders by their power and interest so you can tailor engagement strategies (manage closely, keep satisfied, keep informed, monitor).",
+    "formalDefinition": "Stakeholder analysis categorizes stakeholders to tailor communication and engagement based on influence and interest.",
+    "textbookReference": "PMBOK 6th: Identify Stakeholders; Stakeholder engagement planning",
+    "nigerianAnalogy": "You don’t message the local chairman the same way you message your cousin—some people must be managed closely, others just need updates."
+  },
+  {
+    "id": "flashcard_business_agile_value_stream_001",
+    "mode": "flashcard",
+    "domain": "business",
+    "framework": "agile",
+    "difficulty": 4,
+    "front": "What is a value stream?",
+    "back": "The end-to-end sequence of activities that delivers value to a customer, from concept to delivery and support.",
+    "formalDefinition": "A value stream is the series of steps an organization uses to create and deliver value to customers.",
+    "textbookReference": "PMBOK 7th: Value delivery system",
+    "nigerianAnalogy": "From buying ingredients to cooking to serving guests to collecting feedback—every step that makes the party successful is part of the value stream."
+  },
+
+  {
+    "id": "theory_process_agile_estimation_001",
+    "mode": "theory",
+    "domain": "process",
+    "framework": "agile",
+    "difficulty": 3,
+    "prompt": "Explain relative estimation (e.g., story points) and how it supports forecasting without pretending the future is perfectly certain.",
+    "expectedKeyPoints": [
+      "Relative sizing compares items to each other rather than hours",
+      "Story points measure effort/complexity/risk",
+      "Velocity enables forecasting ranges, not guarantees",
+      "Re-estimate as learning occurs",
+      "Supports transparency and planning under uncertainty"
+    ],
+    "formalDefinition": "Relative estimation sizes work items by comparison to a reference item, enabling forecasting based on observed throughput rather than speculative precision.",
+    "textbookReference": "PMI Agile Practice Guide: Estimation and forecasting",
+    "nigerianAnalogy": "You may not know the exact minutes for cooking, but you can say: ‘fried rice is harder than jollof’ and plan the day based on what your kitchen usually completes."
+  }
+]
