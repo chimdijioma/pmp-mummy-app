@@ -43,61 +43,35 @@ function parseFeedback(data: unknown): EvaluateFeedback | null {
   const root = data as Record<string, unknown>;
   const examiner = root.examinerRationale as Record<string, unknown> | undefined;
   const reference = root.textbookReference as Record<string, unknown> | undefined;
-  const source = reference?.source;
-  const quoteType = reference?.quoteType;
- // Line 48: Ensure it's always a string, even if the AI forgets it
+
+  // 1. Force the analogy to exist so the app doesn't crash
   const nigerianAnalogy = typeof root.nigerianAnalogy === "string" ? root.nigerianAnalogy : "Keep pushing, Mummy Chi!";
 
-  if (
-    typeof nigerianAnalogy !== "string" || // This is now safe because we forced it above
-    !isStringArray(root.whatSheDidWell) ||
-    !isStringArray(root.whatSheMissed) ||
-    typeof root.suggestedImprovement !== "string" ||
-    typeof root.score !== "number" ||
-    !examiner ||
-    typeof examiner.overallJudgement !== "string" ||
-    !isStringArray(examiner.rationalePoints) ||
-    (source !== "PMBOK 7th" && source !== "PMI Agile Practice Guide")
-  ) {
+  // 2. Critical Validation: Only return null if the AI completely failed to provide the essentials
+  if (!isStringArray(root.whatSheDidWell) || !isStringArray(root.whatSheMissed) || typeof root.score !== "number" || !examiner) {
     return null;
   }
-  
-  // Return the object even if quote/relevance/section are messy
+
+  // 3. Construct and return the valid object
   return {
-    ...root,
+    whatSheDidWell: root.whatSheDidWell as string[],
+    whatSheMissed: root.whatSheMissed as string[],
+    suggestedImprovement: typeof root.suggestedImprovement === "string" ? root.suggestedImprovement : "Keep practicing.",
+    score: root.score as number,
     nigerianAnalogy,
+    examinerRationale: {
+      overallJudgement: typeof examiner.overallJudgement === "string" ? examiner.overallJudgement : "Review your approach.",
+      rationalePoints: isStringArray(examiner.rationalePoints) ? examiner.rationalePoints : [],
+      distractorAnalysis: isStringArray(examiner.distractorAnalysis) ? examiner.distractorAnalysis : []
+    },
     textbookReference: {
-      ...reference,
+      source: (reference?.source === "PMBOK 7th" || reference?.source === "PMI Agile Practice Guide") ? (reference.source as "PMBOK 7th" | "PMI Agile Practice Guide") : "PMBOK 7th",
       section: typeof reference?.section === "string" ? reference.section : "General",
       quote: typeof reference?.quote === "string" ? reference.quote : "No quote provided.",
+      quoteType: (reference?.quoteType === "exact" || reference?.quoteType === "paraphrase") ? (reference.quoteType as "exact" | "paraphrase") : "paraphrase",
       relevance: typeof reference?.relevance === "string" ? reference.relevance : "See PMBOK guide."
     }
   } as EvaluateFeedback;
-    (quoteType !== "exact" && quoteType !== "paraphrase") ||
-    typeof reference.relevance !== "string"
-  ) {
-    return null;
-  }
-
-  return {
-    whatSheDidWell: root.whatSheDidWell,
-    whatSheMissed: root.whatSheMissed,
-    suggestedImprovement: root.suggestedImprovement,
-    score: root.score,
-    nigerianAnalogy,
-    examinerRationale: {
-      overallJudgement: examiner.overallJudgement,
-      rationalePoints: examiner.rationalePoints,
-      distractorAnalysis: examiner.distractorAnalysis,
-    },
-    textbookReference: {
-      source,
-      section: reference.section,
-      quote: reference.quote,
-      quoteType,
-      relevance: reference.relevance,
-    },
-  };
 }
 
 export async function POST(req: Request) {
