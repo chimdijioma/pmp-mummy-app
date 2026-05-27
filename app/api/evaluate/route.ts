@@ -1,15 +1,23 @@
 import Anthropic from "@anthropic-ai/sdk";
 import type { ContentBlock, Message } from "@anthropic-ai/sdk/resources/messages/messages";
+import type { EvaluateFeedback } from "../../lib/types";
 
 export const runtime = "nodejs";
 
 type EvaluateRequestBody = {
   questionId: string;
+  mode: "mcq" | "flashcard" | "theory";
   prompt: string;
-  expectedKeyPoints: string[];
+  expectedKeyPoints?: string[];
+  choices?: string[];
+  selectedChoiceIndex?: number;
+  correctChoiceIndex?: number;
+  flashcardBack?: string;
   answerText: string;
   framework: "predictive" | "agile" | "hybrid";
   domain: "people" | "process" | "business";
+  textbookReference?: string;
+  formalDefinition?: string;
 };
 
 function badRequest(message: string) {
@@ -31,6 +39,56 @@ function isTextBlock(block: ContentBlock): block is Extract<ContentBlock, { type
   return block.type === "text";
 }
 
+function isStringArray(x: unknown): x is string[] {
+  return Array.isArray(x) && x.every((item) => typeof item === "string");
+}
+
+function parseFeedback(data: unknown): EvaluateFeedback | null {
+  if (!data || typeof data !== "object") return null;
+  const root = data as Record<string, unknown>;
+  const examiner = root.examinerRationale as Record<string, unknown> | undefined;
+  const reference = root.textbookReference as Record<string, unknown> | undefined;
+  const source = reference?.source;
+  const quoteType = reference?.quoteType;
+  if (
+    !isStringArray(root.whatSheDidWell) ||
+    !isStringArray(root.whatSheMissed) ||
+    typeof root.suggestedImprovement !== "string" ||
+    typeof root.score !== "number" ||
+    !examiner ||
+    typeof examiner.overallJudgement !== "string" ||
+    !isStringArray(examiner.rationalePoints) ||
+    !isStringArray(examiner.distractorAnalysis) ||
+    !reference ||
+    (source !== "PMBOK 7th" && source !== "PMI Agile Practice Guide") ||
+    typeof reference.section !== "string" ||
+    typeof reference.quote !== "string" ||
+    (quoteType !== "exact" && quoteType !== "paraphrase") ||
+    typeof reference.relevance !== "string"
+  ) {
+    return null;
+  }
+
+  return {
+    whatSheDidWell: root.whatSheDidWell,
+    whatSheMissed: root.whatSheMissed,
+    suggestedImprovement: root.suggestedImprovement,
+    score: root.score,
+    examinerRationale: {
+      overallJudgement: examiner.overallJudgement,
+      rationalePoints: examiner.rationalePoints,
+      distractorAnalysis: examiner.distractorAnalysis,
+    },
+    textbookReference: {
+      source,
+      section: reference.section,
+      quote: reference.quote,
+      quoteType,
+      relevance: reference.relevance,
+    },
+  };
+}
+
 export async function POST(req: Request) {
   const apiKey = process.env.ANTHROPIC_API_KEY;
   if (!apiKey) {
@@ -48,6 +106,7 @@ export async function POST(req: Request) {
   }
 
   const questionId = cleanString(body.questionId);
+  const mode = body.mode;
   const prompt = cleanString(body.prompt);
   const answerText = cleanString(body.answerText);
   const expectedKeyPoints = Array.isArray(body.expectedKeyPoints)
@@ -55,6 +114,9 @@ export async function POST(req: Request) {
     : [];
 
   if (!questionId) return badRequest("questionId is required.");
+  if (mode !== "mcq" && mode !== "flashcard" && mode !== "theory") {
+    return badRequest("mode must be mcq, flashcard, or theory.");
+  }
   if (!prompt) return badRequest("prompt is required.");
   if (!answerText) return badRequest("answerText is required.");
   if (answerText.length > 5000) return badRequest("answerText is too long.");
@@ -62,10 +124,12 @@ export async function POST(req: Request) {
   const anthropic = new Anthropic({ apiKey });
 
   const system = [
-    "You are a supportive PMP exam tutor for a learner named Mummy Chi.",
-    "Evaluate the learner's short-answer response against PMI/PMP principles.",
-    "Be warm and encouraging, but technically precise.",
-    "Think like a project manager: assess impacts before acting, tailor approach, prioritize value, manage stakeholders, manage risk, and follow appropriate governance.",
+    "You are a strict PMP examiner coaching a learner named Mummy Chi.",
+    "Evaluate the learner response with examiner-level precision using PMI decision logic.",
+    "Explain why the best answer is correct and why alternatives are distractors.",
+    "Be concise, direct, and technically rigorous.",
+    "Always include a dedicated textbookReference section grounded in PMBOK 7th or the PMI Agile Practice Guide.",
+    "If you cannot provide an exact quote with confidence, set quoteType to paraphrase.",
     "Return ONLY valid JSON. No markdown, no backticks, no extra keys.",
     "",
     "JSON schema:",
@@ -73,7 +137,19 @@ export async function POST(req: Request) {
     '  "whatSheDidWell": string[],',
     '  "whatSheMissed": string[],',
     '  "suggestedImprovement": string,',
-    '  "score": number',
+    '  "score": number,',
+    '  "examinerRationale": {',
+    '    "overallJudgement": string,',
+    '    "rationalePoints": string[],',
+    '    "distractorAnalysis": string[]',
+    "  },",
+    '  "textbookReference": {',
+    '    "source": "PMBOK 7th" | "PMI Agile Practice Guide",',
+    '    "section": string,',
+    '    "quote": string,',
+    '    "quoteType": "exact" | "paraphrase",',
+    '    "relevance": string',
+    "  }",
     "}",
     "",
     "Scoring guidance:",
@@ -85,6 +161,7 @@ export async function POST(req: Request) {
 
   const userContent = [
     `QuestionId: ${questionId}`,
+    `Mode: ${mode}`,
     `Framework: ${body.framework}`,
     `Domain: ${body.domain}`,
     "",
@@ -94,13 +171,21 @@ export async function POST(req: Request) {
     "Expected key points (rubric):",
     expectedKeyPoints.length ? expectedKeyPoints.map((x) => `- ${x}`).join("\n") : "- (none provided)",
     "",
+    "Choices (if MCQ):",
+    Array.isArray(body.choices) ? body.choices.map((x, i) => `${i}. ${x}`).join("\n") : "- (not provided)",
+    `Selected choice index: ${typeof body.selectedChoiceIndex === "number" ? body.selectedChoiceIndex : "(none provided)"}`,
+    `Correct choice index: ${typeof body.correctChoiceIndex === "number" ? body.correctChoiceIndex : "(none provided)"}`,
+    `Flashcard expected answer: ${cleanString(body.flashcardBack) || "(none provided)"}`,
+    `Question textbook reference: ${cleanString(body.textbookReference) || "(none provided)"}`,
+    `Question formal definition: ${cleanString(body.formalDefinition) || "(none provided)"}`,
+    "",
     "Learner answer:",
     answerText,
   ].join("\n");
 
   try {
     const msg = await anthropic.messages.create({
-      model: "claude-3-5-sonnet-latest",
+      model: "claude-3-5-sonnet-20241022",
       max_tokens: 700,
       temperature: 0.2,
       system,
@@ -126,7 +211,11 @@ export async function POST(req: Request) {
       }
     }
 
-    return Response.json(parsed);
+    const validated = parseFeedback(parsed);
+    if (!validated) {
+      return Response.json({ error: "Model returned invalid schema." }, { status: 502 });
+    }
+    return Response.json(validated);
   } catch (e) {
     return Response.json(
       { error: e instanceof Error ? e.message : "Evaluation failed." },
