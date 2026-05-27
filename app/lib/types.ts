@@ -56,4 +56,16 @@ export interface EvaluateFeedback {
   whatSheMissed: string[];
   suggestedImprovement: string;
   score: number;
+  examinerRationale: {
+    overallJudgement: string;
+    rationalePoints: string[];
+    distractorAnalysis: string[];
+  };
+  textbookReference: {
+    source: "PMBOK 7th" | "PMI Agile Practice Guide";
+    section: string;
+    quote: string;
+    quoteType: "exact" | "paraphrase";
+    relevance: string;
+  };
 }
