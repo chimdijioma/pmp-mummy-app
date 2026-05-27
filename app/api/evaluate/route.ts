@@ -50,6 +50,7 @@ function parseFeedback(data: unknown): EvaluateFeedback | null {
   const reference = root.textbookReference as Record<string, unknown> | undefined;
   const source = reference?.source;
   const quoteType = reference?.quoteType;
+  const nigerianAnalogy = typeof root.nigerianAnalogy === "string" ? root.nigerianAnalogy : undefined;
   if (
     !isStringArray(root.whatSheDidWell) ||
     !isStringArray(root.whatSheMissed) ||
@@ -74,6 +75,7 @@ function parseFeedback(data: unknown): EvaluateFeedback | null {
     whatSheMissed: root.whatSheMissed,
     suggestedImprovement: root.suggestedImprovement,
     score: root.score,
+    nigerianAnalogy,
     examinerRationale: {
       overallJudgement: examiner.overallJudgement,
       rationalePoints: examiner.rationalePoints,
@@ -129,6 +131,10 @@ export async function POST(req: Request) {
     "Explain why the best answer is correct and why alternatives are distractors.",
     "Be concise, direct, and technically rigorous.",
     "Always include a dedicated textbookReference section grounded in PMBOK 7th or the PMI Agile Practice Guide.",
+    "NIGERIAN ANALOGY: Provide a highly descriptive, step-by-step breakdown using familiar cultural scenarios (for example: Lagos party, Owambe planning, market negotiating, or family events). The analogy must clearly map:",
+    "1) What the concept represents in everyday terms.",
+    "2) Why the incorrect options are like choosing the wrong ingredient or the wrong step in that scenario.",
+    "Write the analogy as an ordered sequence of steps (not a single sentence).",
     "If you cannot provide an exact quote with confidence, set quoteType to paraphrase.",
     "Return ONLY valid JSON. No markdown, no backticks, no extra keys.",
     "",
@@ -138,6 +144,7 @@ export async function POST(req: Request) {
     '  "whatSheMissed": string[],',
     '  "suggestedImprovement": string,',
     '  "score": number,',
+    '  "nigerianAnalogy": string,',
     '  "examinerRationale": {',
     '    "overallJudgement": string,',
     '    "rationalePoints": string[],',
@@ -184,15 +191,34 @@ export async function POST(req: Request) {
   ].join("\n");
 
   try {
-    const msg = await anthropic.messages.create({
-      model: "claude-3-5-sonnet-20241022",
-      max_tokens: 700,
-      temperature: 0.2,
-      system,
-      messages: [{ role: "user", content: userContent }],
-    });
+    const modelCandidates = ["claude-3-5-sonnet-v2@20241022", "claude-3-5-sonnet-20241022"];
+    let lastErr: unknown = null;
+    let msg: Message | null = null;
 
-    const text = extractFirstText((msg as Message).content);
+    for (const model of modelCandidates) {
+      try {
+        msg = await anthropic.messages.create({
+          model,
+          max_tokens: 700,
+          temperature: 0.2,
+          system,
+          messages: [{ role: "user", content: userContent }],
+        });
+        lastErr = null;
+        break;
+      } catch (e) {
+        lastErr = e;
+        const msgText = e instanceof Error ? e.message : "";
+        const looksLikeModelNotFound = /404|not found|model/i.test(msgText);
+        if (!looksLikeModelNotFound) throw e;
+      }
+    }
+
+    if (!msg) {
+      throw lastErr instanceof Error ? lastErr : new Error("Evaluation failed (no model candidate succeeded).");
+    }
+
+    const text = extractFirstText(msg.content);
     if (!text) {
       return Response.json({ error: "Empty model response." }, { status: 502 });
     }
