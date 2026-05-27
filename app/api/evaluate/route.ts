@@ -45,8 +45,9 @@ function parseFeedback(data: unknown): EvaluateFeedback | null {
   const reference = root.textbookReference as Record<string, unknown> | undefined;
   const source = reference?.source;
   const quoteType = reference?.quoteType;
-  const nigerianAnalogy = typeof root.nigerianAnalogy === "string" ? root.nigerianAnalogy : undefined;
+  const nigerianAnalogy = typeof root.nigerianAnalogy === "string" ? root.nigerianAnalogy : "Keep pushing!";
   if (
+    || typeof nigerianAnalogy !== "string"
     !isStringArray(root.whatSheDidWell) ||
     !isStringArray(root.whatSheMissed) ||
     typeof root.suggestedImprovement !== "string" ||
