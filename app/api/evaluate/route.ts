@@ -45,9 +45,11 @@ function parseFeedback(data: unknown): EvaluateFeedback | null {
   const reference = root.textbookReference as Record<string, unknown> | undefined;
   const source = reference?.source;
   const quoteType = reference?.quoteType;
-  const nigerianAnalogy = typeof root.nigerianAnalogy === "string" ? root.nigerianAnalogy : "Keep pushing!";
+ // Line 48: Ensure it's always a string, even if the AI forgets it
+  const nigerianAnalogy = typeof root.nigerianAnalogy === "string" ? root.nigerianAnalogy : "Keep pushing, Mummy Chi!";
+
   if (
-  typeof nigerianAnalogy !== "string" ||
+    typeof nigerianAnalogy !== "string" || // This is now safe because we forced it above
     !isStringArray(root.whatSheDidWell) ||
     !isStringArray(root.whatSheMissed) ||
     typeof root.suggestedImprovement !== "string" ||
