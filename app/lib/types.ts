@@ -68,4 +68,5 @@ export interface EvaluateFeedback {
     quoteType: "exact" | "paraphrase";
     relevance: string;
   };
+  nigerianAnalogy: string;
 }
