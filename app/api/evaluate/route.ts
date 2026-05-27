@@ -57,11 +57,22 @@ function parseFeedback(data: unknown): EvaluateFeedback | null {
     !examiner ||
     typeof examiner.overallJudgement !== "string" ||
     !isStringArray(examiner.rationalePoints) ||
-    !isStringArray(examiner.distractorAnalysis) ||
-    !reference ||
-    (source !== "PMBOK 7th" && source !== "PMI Agile Practice Guide") ||
-    typeof reference.section !== "string" ||
-    typeof reference.quote !== "string" ||
+    (source !== "PMBOK 7th" && source !== "PMI Agile Practice Guide")
+  ) {
+    return null;
+  }
+  
+  // Return the object even if quote/relevance/section are messy
+  return {
+    ...root,
+    nigerianAnalogy,
+    textbookReference: {
+      ...reference,
+      section: typeof reference?.section === "string" ? reference.section : "General",
+      quote: typeof reference?.quote === "string" ? reference.quote : "No quote provided.",
+      relevance: typeof reference?.relevance === "string" ? reference.relevance : "See PMBOK guide."
+    }
+  } as EvaluateFeedback;
     (quoteType !== "exact" && quoteType !== "paraphrase") ||
     typeof reference.relevance !== "string"
   ) {
