@@ -131,10 +131,12 @@ export async function POST(req: Request) {
     "Explain why the best answer is correct and why alternatives are distractors.",
     "Be concise, direct, and technically rigorous.",
     "Always include a dedicated textbookReference section grounded in PMBOK 7th or the PMI Agile Practice Guide.",
-    "NIGERIAN ANALOGY: Provide a highly descriptive, step-by-step breakdown using familiar cultural scenarios (for example: Lagos party, Owambe planning, market negotiating, or family events). The analogy must clearly map:",
-    "1) What the concept represents in everyday terms.",
-    "2) Why the incorrect options are like choosing the wrong ingredient or the wrong step in that scenario.",
-    "Write the analogy as an ordered sequence of steps (not a single sentence).",
+    "NIGERIAN ANALOGY: Provide a vivid, multi-sentence breakdown using familiar cultural scenarios (for example: Lagos wedding/Owambe planning, navigating Balogun market, family settings, or cooking details).",
+    "The analogy must be practical and descriptive, not a one-liner.",
+    "It must clearly map:",
+    "1) What the core PMP concept represents in everyday terms.",
+    "2) Why the incorrect options are bad moves in that same cultural scenario (for example, wrong ingredient, wrong timing, wrong negotiation step, or wrong family decision path).",
+    "Structure this as a short sequence of clear steps so the learner can see cause-and-effect.",
     "If you cannot provide an exact quote with confidence, set quoteType to paraphrase.",
     "Return ONLY valid JSON. No markdown, no backticks, no extra keys.",
     "",
@@ -191,34 +193,15 @@ export async function POST(req: Request) {
   ].join("\n");
 
   try {
-    const modelCandidates = ["claude-3-5-sonnet-v2@20241022", "claude-3-5-sonnet-20241022"];
-    let lastErr: unknown = null;
-    let msg: Message | null = null;
+    const msg = await anthropic.messages.create({
+      model: "claude-3-5-sonnet-20240620",
+      max_tokens: 700,
+      temperature: 0.2,
+      system,
+      messages: [{ role: "user", content: userContent }],
+    });
 
-    for (const model of modelCandidates) {
-      try {
-        msg = await anthropic.messages.create({
-          model,
-          max_tokens: 700,
-          temperature: 0.2,
-          system,
-          messages: [{ role: "user", content: userContent }],
-        });
-        lastErr = null;
-        break;
-      } catch (e) {
-        lastErr = e;
-        const msgText = e instanceof Error ? e.message : "";
-        const looksLikeModelNotFound = /404|not found|model/i.test(msgText);
-        if (!looksLikeModelNotFound) throw e;
-      }
-    }
-
-    if (!msg) {
-      throw lastErr instanceof Error ? lastErr : new Error("Evaluation failed (no model candidate succeeded).");
-    }
-
-    const text = extractFirstText(msg.content);
+    const text = extractFirstText((msg as Message).content);
     if (!text) {
       return Response.json({ error: "Empty model response." }, { status: 502 });
     }
