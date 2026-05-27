@@ -20,6 +20,7 @@ export function TheoryMode({
   const [loading, setLoading] = useState(false);
   const [feedback, setFeedback] = useState<EvaluateFeedback | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [pendingResult, setPendingResult] = useState<"correct" | "incorrect" | null>(null);
 
   function toggleFlag() {
     const next = structuredClone(state) as SchedulerState;
@@ -42,11 +43,14 @@ export function TheoryMode({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           questionId: question.id,
+          mode: "theory",
           prompt: question.prompt,
           expectedKeyPoints: question.expectedKeyPoints,
           answerText: text,
           framework: question.framework,
           domain: question.domain,
+          textbookReference: question.textbookReference,
+          formalDefinition: question.formalDefinition,
         }),
       });
 
@@ -57,11 +61,7 @@ export function TheoryMode({
 
       const data = (await res.json()) as EvaluateFeedback;
       setFeedback(data);
-
-      // Map score to attempt result: >=70 => correct, else incorrect
-      const next = structuredClone(state) as SchedulerState;
-      recordAttempt(next, question.id, data.score >= 70 ? "correct" : "incorrect");
-      setState(next);
+      setPendingResult(data.score >= 70 ? "correct" : "incorrect");
     } catch (e) {
       setError(e instanceof Error ? e.message : "Something went wrong.");
     } finally {
@@ -70,9 +70,15 @@ export function TheoryMode({
   }
 
   function nextQuestion() {
+    if (pendingResult) {
+      const next = structuredClone(state) as SchedulerState;
+      recordAttempt(next, question.id, pendingResult);
+      setState(next);
+    }
     setText("");
     setFeedback(null);
     setError(null);
+    setPendingResult(null);
     onNext();
   }
 
@@ -125,14 +131,15 @@ export function TheoryMode({
               disabled={loading}
               className="rounded-2xl bg-gradient-to-r from-[#d10b3c] via-[#ff2f6a] to-[#ff7aa8] px-4 py-2 text-sm font-semibold text-white shadow-[0_16px_55px_rgba(209,11,60,0.22)] disabled:opacity-50"
             >
-              {loading ? "Evaluating…" : "Submit for feedback"}
+              {loading ? "Checking answer..." : "Check answer"}
             </button>
             <button
               type="button"
               onClick={nextQuestion}
+              disabled={!feedback}
               className="rounded-2xl border border-zinc-200 bg-white px-4 py-2 text-sm font-semibold text-zinc-950 shadow-[0_10px_35px_rgba(11,11,16,0.05)] hover:bg-rose-50/60 dark:border-zinc-800 dark:bg-zinc-950/70 dark:text-white dark:hover:bg-[#120613]"
             >
-              Next
+              Next question
             </button>
           </div>
         </div>
@@ -147,7 +154,7 @@ export function TheoryMode({
           <div className="mt-4 rounded-3xl border border-zinc-200 bg-white p-5 shadow-[0_18px_60px_rgba(11,11,16,0.06)] dark:border-zinc-800 dark:bg-zinc-950/70 dark:shadow-[0_22px_70px_rgba(0,0,0,0.42)]">
             <div className="flex items-center justify-between gap-3">
               <div className="text-sm font-semibold text-zinc-950 dark:text-white">
-                Tutor feedback
+                Examiner feedback
               </div>
               <div className="rounded-full bg-gradient-to-r from-[#d10b3c] via-[#ff2f6a] to-[#ff7aa8] px-3 py-1 text-xs font-semibold text-white shadow-[0_14px_45px_rgba(209,11,60,0.20)]">
                 Score: {Math.round(feedback.score)}/100
@@ -182,8 +189,41 @@ export function TheoryMode({
               <div className="mt-1 opacity-90">{feedback.suggestedImprovement}</div>
             </div>
 
-            <div className="mt-4 text-xs text-zinc-500 dark:text-zinc-400">
-              Reference: {question.textbookReference}
+            <div className="mt-4 rounded-2xl border border-zinc-200/80 bg-white/80 p-4 dark:border-zinc-800 dark:bg-zinc-950/50">
+              <div className="text-xs font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
+                Examiner rationale
+              </div>
+              <div className="mt-2 text-sm font-medium text-zinc-950 dark:text-white">
+                {feedback.examinerRationale.overallJudgement}
+              </div>
+              <ul className="mt-2 list-disc space-y-1 pl-5 text-sm text-zinc-950 dark:text-white">
+                {feedback.examinerRationale.rationalePoints.map((x, i) => (
+                  <li key={`r-${i}`}>{x}</li>
+                ))}
+              </ul>
+              <div className="mt-3 text-xs font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
+                Distractor analysis
+              </div>
+              <ul className="mt-2 list-disc space-y-1 pl-5 text-sm text-zinc-950 dark:text-white">
+                {feedback.examinerRationale.distractorAnalysis.map((x, i) => (
+                  <li key={`d-${i}`}>{x}</li>
+                ))}
+              </ul>
+            </div>
+
+            <div className="mt-4 rounded-2xl border border-zinc-200/80 bg-white/80 p-4 dark:border-zinc-800 dark:bg-zinc-950/50">
+              <div className="text-xs font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
+                Textbook reference
+              </div>
+              <div className="mt-2 text-sm font-semibold text-zinc-950 dark:text-white">
+                {feedback.textbookReference.source} - {feedback.textbookReference.section}
+              </div>
+              <div className="mt-1 text-sm text-zinc-950/90 dark:text-white/90">
+                ({feedback.textbookReference.quoteType}) {feedback.textbookReference.quote}
+              </div>
+              <div className="mt-2 text-sm text-zinc-950/90 dark:text-white/90">
+                {feedback.textbookReference.relevance}
+              </div>
             </div>
           </div>
         )}

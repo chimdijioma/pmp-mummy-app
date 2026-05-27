@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import type { FlashcardQuestion, SchedulerState } from "../lib/types";
+import type { EvaluateFeedback, FlashcardQuestion, SchedulerState } from "../lib/types";
 import { FeedbackCard } from "./FeedbackCard";
 import { getOrInitItem, recordAttempt, setFlagged } from "../lib/spacedRepetition";
 
@@ -18,14 +18,51 @@ export function FlashcardMode({
 }) {
   const [flipped, setFlipped] = useState(false);
   const [lastResult, setLastResult] = useState<"correct" | "incorrect" | null>(null);
+  const [loadingFeedback, setLoadingFeedback] = useState(false);
+  const [feedbackError, setFeedbackError] = useState<string | null>(null);
+  const [aiFeedback, setAiFeedback] = useState<EvaluateFeedback | null>(null);
 
   const schedule = useMemo(() => getOrInitItem(state, card.id), [state, card.id]);
 
-  function mark(result: "correct" | "incorrect") {
-    const next = structuredClone(state) as SchedulerState;
-    recordAttempt(next, card.id, result);
-    setState(next);
+  async function mark(result: "correct" | "incorrect") {
+    setFeedbackError(null);
+    setAiFeedback(null);
     setLastResult(result);
+    setLoadingFeedback(true);
+    try {
+      const answerText =
+        result === "correct"
+          ? `I understood this concept: ${card.front}`
+          : `I missed this concept and could not explain: ${card.front}`;
+      const res = await fetch("/api/evaluate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          questionId: card.id,
+          mode: "flashcard",
+          prompt: card.front,
+          flashcardBack: card.back,
+          expectedKeyPoints: [
+            "Evaluate if learner understood core concept behind the flashcard.",
+            "Provide PMI-aligned rationale and correction guidance.",
+          ],
+          answerText,
+          framework: card.framework,
+          domain: card.domain,
+          textbookReference: card.textbookReference,
+          formalDefinition: card.formalDefinition,
+        }),
+      });
+      if (!res.ok) {
+        const t = await res.text();
+        throw new Error(t || `Request failed (${res.status})`);
+      }
+      setAiFeedback((await res.json()) as EvaluateFeedback);
+    } catch (e) {
+      setFeedbackError(e instanceof Error ? e.message : "Unable to load examiner feedback.");
+    } finally {
+      setLoadingFeedback(false);
+    }
   }
 
   function toggleFlag() {
@@ -35,8 +72,15 @@ export function FlashcardMode({
   }
 
   function nextCard() {
+    if (lastResult) {
+      const next = structuredClone(state) as SchedulerState;
+      recordAttempt(next, card.id, lastResult);
+      setState(next);
+    }
     setFlipped(false);
     setLastResult(null);
+    setFeedbackError(null);
+    setAiFeedback(null);
     onNext();
   }
 
@@ -81,14 +125,14 @@ export function FlashcardMode({
           <>
             <button
               type="button"
-              onClick={() => mark("correct")}
+              onClick={() => void mark("correct")}
               className="rounded-2xl bg-gradient-to-r from-[#d10b3c] via-[#ff2f6a] to-[#ff7aa8] px-4 py-2 text-sm font-semibold text-white shadow-[0_16px_55px_rgba(209,11,60,0.22)]"
             >
               I knew this
             </button>
             <button
               type="button"
-              onClick={() => mark("incorrect")}
+              onClick={() => void mark("incorrect")}
               className="rounded-2xl border border-rose-200 bg-rose-50/70 px-4 py-2 text-sm font-semibold text-zinc-950 shadow-[0_12px_40px_rgba(209,11,60,0.10)] hover:bg-rose-100/70 dark:border-rose-900/50 dark:bg-rose-950/25 dark:text-white dark:hover:bg-rose-950/40"
             >
               I missed it
@@ -108,12 +152,25 @@ export function FlashcardMode({
       </div>
 
       {showFeedback && (
-        <FeedbackCard
-          correct={lastResult === "correct"}
-          textbookReference={card.textbookReference}
-          formalDefinition={card.formalDefinition}
-          nigerianAnalogy={card.nigerianAnalogy}
-        />
+        <>
+          <FeedbackCard
+            correct={lastResult === "correct"}
+            textbookReference={card.textbookReference}
+            formalDefinition={card.formalDefinition}
+            nigerianAnalogy={card.nigerianAnalogy}
+            aiFeedback={aiFeedback}
+          />
+          {loadingFeedback && (
+            <div className="mt-3 rounded-2xl border border-zinc-200 bg-white px-4 py-3 text-sm text-zinc-600 dark:border-zinc-800 dark:bg-zinc-950/60 dark:text-zinc-300">
+              Generating examiner-level feedback...
+            </div>
+          )}
+          {feedbackError && (
+            <div className="mt-3 rounded-2xl border border-rose-200 bg-rose-50/70 px-4 py-3 text-sm text-zinc-950 dark:border-rose-900/60 dark:bg-rose-950/25 dark:text-white">
+              {feedbackError}
+            </div>
+          )}
+        </>
       )}
     </div>
   );

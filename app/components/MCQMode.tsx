@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import type { MCQQuestion, SchedulerState } from "../lib/types";
+import type { EvaluateFeedback, MCQQuestion, SchedulerState } from "../lib/types";
 import { FeedbackCard } from "./FeedbackCard";
 import { getOrInitItem, recordAttempt, setFlagged } from "../lib/spacedRepetition";
 
@@ -18,17 +18,57 @@ export function MCQMode({
 }) {
   const [selected, setSelected] = useState<number | null>(null);
   const [submitted, setSubmitted] = useState(false);
+  const [pendingResult, setPendingResult] = useState<"correct" | "incorrect" | null>(null);
+  const [loadingFeedback, setLoadingFeedback] = useState(false);
+  const [feedbackError, setFeedbackError] = useState<string | null>(null);
+  const [aiFeedback, setAiFeedback] = useState<EvaluateFeedback | null>(null);
 
   const schedule = useMemo(() => getOrInitItem(state, question.id), [state, question.id]);
 
   const correct = submitted && selected === question.correctChoiceIndex;
 
-  function submit() {
+  async function submit() {
     if (selected === null) return;
-    const next = structuredClone(state) as SchedulerState;
-    recordAttempt(next, question.id, selected === question.correctChoiceIndex ? "correct" : "incorrect");
-    setState(next);
+    const result = selected === question.correctChoiceIndex ? "correct" : "incorrect";
+    setFeedbackError(null);
+    setAiFeedback(null);
+    setPendingResult(result);
     setSubmitted(true);
+
+    setLoadingFeedback(true);
+    try {
+      const res = await fetch("/api/evaluate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          questionId: question.id,
+          mode: "mcq",
+          prompt: question.prompt,
+          choices: question.choices,
+          selectedChoiceIndex: selected,
+          correctChoiceIndex: question.correctChoiceIndex,
+          expectedKeyPoints: [
+            `Correct option index is ${question.correctChoiceIndex}`,
+            "Explain why correct option aligns with PMI decision logic.",
+            "Explain why each distractor is wrong or less appropriate.",
+          ],
+          answerText: question.choices[selected],
+          framework: question.framework,
+          domain: question.domain,
+          textbookReference: question.textbookReference,
+          formalDefinition: question.formalDefinition,
+        }),
+      });
+      if (!res.ok) {
+        const t = await res.text();
+        throw new Error(t || `Request failed (${res.status})`);
+      }
+      setAiFeedback((await res.json()) as EvaluateFeedback);
+    } catch (e) {
+      setFeedbackError(e instanceof Error ? e.message : "Unable to load examiner feedback.");
+    } finally {
+      setLoadingFeedback(false);
+    }
   }
 
   function toggleFlag() {
@@ -38,8 +78,16 @@ export function MCQMode({
   }
 
   function nextQuestion() {
+    if (pendingResult) {
+      const next = structuredClone(state) as SchedulerState;
+      recordAttempt(next, question.id, pendingResult);
+      setState(next);
+    }
     setSelected(null);
     setSubmitted(false);
+    setPendingResult(null);
+    setFeedbackError(null);
+    setAiFeedback(null);
     onNext();
   }
 
@@ -113,7 +161,7 @@ export function MCQMode({
           {!submitted ? (
             <button
               type="button"
-              onClick={submit}
+              onClick={() => void submit()}
               disabled={selected === null}
               className="rounded-2xl bg-gradient-to-r from-[#d10b3c] via-[#ff2f6a] to-[#ff7aa8] px-4 py-2 text-sm font-semibold text-white shadow-[0_16px_55px_rgba(209,11,60,0.22)] disabled:cursor-not-allowed disabled:opacity-50"
             >
@@ -132,12 +180,25 @@ export function MCQMode({
       </div>
 
       {submitted && selected !== null && (
-        <FeedbackCard
-          correct={correct}
-          textbookReference={question.textbookReference}
-          formalDefinition={question.formalDefinition}
-          nigerianAnalogy={question.nigerianAnalogy}
-        />
+        <>
+          <FeedbackCard
+            correct={correct}
+            textbookReference={question.textbookReference}
+            formalDefinition={question.formalDefinition}
+            nigerianAnalogy={question.nigerianAnalogy}
+            aiFeedback={aiFeedback}
+          />
+          {loadingFeedback && (
+            <div className="mt-3 rounded-2xl border border-zinc-200 bg-white px-4 py-3 text-sm text-zinc-600 dark:border-zinc-800 dark:bg-zinc-950/60 dark:text-zinc-300">
+              Generating examiner-level feedback...
+            </div>
+          )}
+          {feedbackError && (
+            <div className="mt-3 rounded-2xl border border-rose-200 bg-rose-50/70 px-4 py-3 text-sm text-zinc-950 dark:border-rose-900/60 dark:bg-rose-950/25 dark:text-white">
+              {feedbackError}
+            </div>
+          )}
+        </>
       )}
     </div>
   );

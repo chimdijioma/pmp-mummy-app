@@ -1,15 +1,19 @@
 "use client";
 
+import type { EvaluateFeedback } from "../lib/types";
+
 export function FeedbackCard({
   correct,
   textbookReference,
   formalDefinition,
   nigerianAnalogy,
+  aiFeedback,
 }: {
   correct: boolean;
   textbookReference: string;
   formalDefinition: string;
   nigerianAnalogy: string;
+  aiFeedback?: EvaluateFeedback | null;
 }) {
   return (
     <div
@@ -44,6 +48,39 @@ export function FeedbackCard({
               Nigerian analogy
             </div>
             <div className="mt-2 text-sm leading-6 opacity-95">{nigerianAnalogy}</div>
+          </div>
+        </div>
+      )}
+
+      {aiFeedback && (
+        <div className="mt-4 grid gap-4">
+          <div className="rounded-2xl border border-zinc-200/80 bg-white/80 p-4 dark:border-zinc-800 dark:bg-zinc-950/50">
+            <div className="text-xs font-semibold uppercase tracking-wide opacity-80">Examiner rationale</div>
+            <div className="mt-2 text-sm font-medium">{aiFeedback.examinerRationale.overallJudgement}</div>
+            <ul className="mt-2 list-disc space-y-1 pl-5 text-sm opacity-95">
+              {aiFeedback.examinerRationale.rationalePoints.map((point, i) => (
+                <li key={`rationale-${i}`}>{point}</li>
+              ))}
+            </ul>
+            <div className="mt-3 text-xs font-semibold uppercase tracking-wide opacity-80">
+              Distractor analysis
+            </div>
+            <ul className="mt-2 list-disc space-y-1 pl-5 text-sm opacity-95">
+              {aiFeedback.examinerRationale.distractorAnalysis.map((point, i) => (
+                <li key={`distractor-${i}`}>{point}</li>
+              ))}
+            </ul>
+          </div>
+
+          <div className="rounded-2xl border border-zinc-200/80 bg-white/80 p-4 dark:border-zinc-800 dark:bg-zinc-950/50">
+            <div className="text-xs font-semibold uppercase tracking-wide opacity-80">Textbook reference</div>
+            <div className="mt-2 text-sm font-semibold">
+              {aiFeedback.textbookReference.source} - {aiFeedback.textbookReference.section}
+            </div>
+            <div className="mt-1 text-sm opacity-95">
+              ({aiFeedback.textbookReference.quoteType}) {aiFeedback.textbookReference.quote}
+            </div>
+            <div className="mt-2 text-sm opacity-90">{aiFeedback.textbookReference.relevance}</div>
           </div>
         </div>
       )}
